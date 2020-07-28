@@ -27,10 +27,16 @@ $(iso): $(kernel) $(grub_cfg)
 	@grub-mkrescue -o $(iso) build/isofiles 2> /dev/null
 	@rm -r build/isofiles
 
-$(kernel): $(assembly_object_files) $(linker_script)
-	@ld -n -T $(linker_script) -o $(kernel) $(assembly_object_files)
+$(kernel): $(assembly_object_files) $(linker_script) elf_maker_example
+	ld -n -T $(linker_script) -o $(kernel) $(assembly_object_files) build/arch/$(arch)/output
 
 # compile assembly files
 build/arch/$(arch)/%.o: src/arch/$(arch)/%.asm
 	@mkdir -p $(shell dirname $@)
 	@nasm -felf64 $< -o $@
+
+elf_maker_example: src/arch/$(arch)/*.c
+	gcc src/arch/$(arch)/*.c -o build/arch/$(arch)/$@
+	cd build/arch/$(arch)/ && ./$@ && cd -
+
+

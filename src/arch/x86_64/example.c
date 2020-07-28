@@ -24,10 +24,9 @@ int main()
   elf_section_t *symbol_table_strings_section = add_symbol_table_strings_section(elf_file, symbol_table_section);
 
   /* add text section*/
-  elf_section_t *text_section = add_text_section(elf_file, symbol_table_section, symbol_table_strings_section, 0x10000);
-
-  unsigned char code[] = {0xc7,0x05,0x00,0x80,0x0b,0x00,0x4f,0x2f, 0x4b,0x2f,0xe9,0x74,0x00,0x40,0x00,0xf4};
-  elf_maker_add_section_entry(text_section, code, 16);
+  elf_section_t *text_section = add_text_section(elf_file, symbol_table_section, symbol_table_strings_section, 0x40000);
+  unsigned char code[] = {0xc7,0x05,0x00,0x80,0x0b,0x00,0x4f,0x2f, 0x4b,0x2f,0xf4};
+  elf_maker_add_section_entry(text_section, code, 11);
 
   /* finalize the string section */
   finalize_strings_section(elf_file, strings_section);
